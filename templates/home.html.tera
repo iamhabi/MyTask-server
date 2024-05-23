@@ -1,0 +1,54 @@
+{% extends "home-base" %}
+
+{% block content %}
+
+<div class="gallery">
+    <div class="groups-container">
+        <nav>
+            <input id="create-group" type="text"/>
+            <button onclick="createGroup()">
+                Create
+            </button>
+
+            <hr>
+
+            <ul id="groups">
+            </ul>
+        </nav>
+    </div>
+
+    <div class="tasks-container">
+        <h2>
+            Task
+        </h2>
+
+        <input id="create-task" type="text"/>
+        <button onclick="createTask()">
+            Create
+        </button>
+
+        <hr>
+
+        <dialog id="dialog_task_detail">
+            <input id="title" type="text" name="title">
+            <br/>
+            <input id="due_date" type="date">
+            <br/>
+            <input id="description" type="text" name="description">
+            <br/>
+            <button id="btn_close_task_detail">close</button>
+            <button id="btn_ok">OK</button>
+        </dialog>
+
+        <ul id="tasks">
+        </ul>
+    </div>
+</div>
+
+<script>
+    var currentGroupId = -1;
+
+    init();
+</script>
+
+{% endblock content %}
