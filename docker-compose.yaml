@@ -1,0 +1,26 @@
+services:
+
+  server:
+    build: .
+    container_name: my-task-server
+    restart: on-failure
+    depends_on:
+      - postgres
+    ports:
+      - "${ROCKET_PORT}:${ROCKET_PORT}"
+    environment:
+      - ROCKET_ADDRESS=${ROCKET_ADDRESS}
+      - ROCKET_PORT=${ROCKET_PORT}
+      - DATABASE_URL=postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:${DATABASE_PORT}/${DATABASE_DB}
+
+  postgres:
+    image: postgres
+    container_name: my-task-postgres
+    restart: unless-stopped
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+    environment:
+      - PGPORT=${DATABASE_PORT}
+      - POSTGRES_DB=${DATABASE_DB}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
