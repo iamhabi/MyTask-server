@@ -1,12 +1,10 @@
 FROM rust:1.78
 
-WORKDIR /
+WORKDIR /var/MyTask-server
 
-RUN cargo install diesel_cli --no-default-features --features postgres &&\
-    git clone https://github.com/iamhabi/MyTask-server.git
+RUN cargo install diesel_cli --no-default-features --features postgres
     
-WORKDIR /MyTask-server/database
+WORKDIR /var/MyTask-server/database
 
 ENTRYPOINT diesel setup &&\
-    cd /MyTask-server &&\
     cargo run --bin server
