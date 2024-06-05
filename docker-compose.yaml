@@ -9,7 +9,7 @@ services:
     ports:
       - "${ROCKET_PORT}:${ROCKET_PORT}"
     volumes:
-      - ./:/var/mytask-server
+      - ./:/mytask-server/
     environment:
       - ROCKET_ADDRESS=${ROCKET_ADDRESS}
       - ROCKET_PORT=${ROCKET_PORT}
