@@ -1,5 +1,5 @@
 """
-URL configuration for mytask_server project.
+URL configuration for test_user project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -17,6 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from rest_framework_simplejwt.views import TokenRefreshView
+
+from accounts.views import RegisterView, CustomTokenObtainPairView
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/register/', RegisterView.as_view(), name='register'),
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
