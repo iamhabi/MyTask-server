@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-a1sg)xjo#1*1c@z9f8loy&xvb$paay6-5l@s$hxkx25d$$6(w*
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     '',
 ]
 
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'accounts',
+    'tasks',
 ]
 
 REST_FRAMEWORK = {
