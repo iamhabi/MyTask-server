@@ -74,8 +74,34 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-
         instance.set_password(validated_data['new_password1'])
+        instance.save()
+
+        return instance
+
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
+
+    class Meta:
+        model = MyUser
+        fields = ['username', 'email']
+
+    def validate_email(self, value):
+        user = self.context['request'].user
+        if MyUser.objects.exclude(id=user.id).filter(email=value).exists():
+            raise serializers.ValidationError({"email": "This email is already in use."})
+        return value
+
+    def validate_username(self, value):
+        user = self.context['request'].user
+        if MyUser.objects.exclude(id=user.id).filter(username=value).exists():
+            raise serializers.ValidationError({"username": "This username is already in use."})
+        return value
+    
+    def update(self, instance, validated_data):
+        instance.email = validated_data['email']
+        instance.username = validated_data['username']
         instance.save()
 
         return instance
