@@ -1,7 +1,6 @@
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-
 
 from .models import MyUser
 from .serializers import (
@@ -20,6 +19,11 @@ class RegisterView(CreateAPIView):
     queryset = MyUser.objects.all()
     permission_classes = [AllowAny,]
     serializer_class = RegisterSerializer
+
+
+class DeleteView(DestroyAPIView):
+    queryset = MyUser.objects.all()
+    permission_classes = [IsAuthenticated,]
 
 
 class ChangePasswordView(UpdateAPIView):

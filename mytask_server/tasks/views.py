@@ -13,10 +13,6 @@ class TaskViewSet(ModelViewSet):
     queryset = Task.objects.all()
     permission_classes = [IsAuthenticated]
 
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
-
     def get_child(request, id):
         try:
             response = JWTAuthentication().authenticate(request)
