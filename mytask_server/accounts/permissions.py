@@ -1,6 +1,5 @@
 from rest_framework.permissions import BasePermission
 
-from .views import *
 
 class UserPermission(BasePermission):
     def has_permission(self, request, view):
