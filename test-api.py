@@ -2,11 +2,11 @@ import requests
 import json
 import datetime
 
-URL = 'http://localhost:8000/api/'
+URL = 'http://localhost:8765/api/'
 
-REGISTER = 'register/'
-CHANGE_PASSWORD = 'change_password/'
-UPDATE_USER = 'update/'
+REGISTER = 'account/register/'
+CHANGE_PASSWORD = 'account/change_password/'
+UPDATE_USER = 'account/update/'
 TOKEN = 'token/'
 TOKEN_REFRESH = f'{TOKEN}refresh/'
 TASKS = 'tasks/'
@@ -213,9 +213,9 @@ def delete_task(token, user_id, task_id):
 if __name__ == '__main__':
     now = datetime.datetime.now()
 
-    # register(USERNAME, EMAIL, PASSWORD, PASSWORD)
+    # response = register(USERNAME, EMAIL, PASSWORD, PASSWORD)
 
-    # refresh_token, access_token, user_id = get_token(NEW_USERNAME, NEW_PASSWORD)
+    # refresh_token, access_token, user_id = get_token(USERNAME, PASSWORD)
     # refresh_token, access_token = get_refresh_token(refresh_token)
 
     # response = change_password(access_token, user_id, PASSWORD, NEW_PASSWORD, NEW_PASSWORD)

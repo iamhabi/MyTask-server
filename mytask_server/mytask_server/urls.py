@@ -32,9 +32,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/tasks/child/<str:id>', TaskViewSet.get_child, name='child'),
-    path('api/register/', RegisterView.as_view(), name='register'),
-    path('api/change_password/<str:pk>', ChangePasswordView.as_view(), name='change_password'),
-    path('api/update/<str:pk>', UpdateUserView.as_view(), name='update_user'),
+    path('api/account/register/', RegisterView.as_view(), name='register'),
+    path('api/account/change_password/<str:pk>', ChangePasswordView.as_view(), name='change_password'),
+    path('api/account/update/<str:pk>', UpdateUserView.as_view(), name='update_user'),
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
