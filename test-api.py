@@ -4,13 +4,16 @@ import datetime
 
 URL = 'http://localhost:8765/api/'
 
-REGISTER = 'account/register/'
-CHANGE_PASSWORD = 'account/change_password/'
-UPDATE_USER = 'account/update/'
+ACCOUNT = 'account/'
+REGISTER = f'{ACCOUNT}register/'
+DELETE = f'{ACCOUNT}delete/'
+UPDATE_USER = f'{ACCOUNT}update/'
+CHANGE_PASSWORD = f'{ACCOUNT}change_password/'
+
 TOKEN = 'token/'
 TOKEN_REFRESH = f'{TOKEN}refresh/'
+
 TASKS = 'tasks/'
-TASKS_CHILD = f'{TASKS}child/'
 
 
 USERNAME = 'test111'
@@ -30,13 +33,15 @@ def register(username, email, password1, password2):
         'email': email,
     }
 
-    return requests.post(
+    response = requests.post(
         url=f'{URL}{REGISTER}',
         data=data
     )
 
+    return json.loads(response.content)
 
-def update_user(token, user_id, new_username, new_email):
+
+def update_account(token, user_id, new_username, new_email):
     headers = get_headers(token)
 
     data = {
@@ -44,11 +49,13 @@ def update_user(token, user_id, new_username, new_email):
         'email': new_email
     }
 
-    return requests.put(
+    response = requests.put(
         url=f'{URL}{UPDATE_USER}{user_id}',
         headers=headers,
         data=data
     )
+
+    return json.loads(response.content)
 
 
 def change_password(token, user_id, old_password, new_password1, new_password2):
@@ -60,11 +67,24 @@ def change_password(token, user_id, old_password, new_password1, new_password2):
         'new_password2': new_password2
     }
 
-    return requests.put(
+    response = requests.put(
         url=f'{URL}{CHANGE_PASSWORD}{user_id}',
         headers=headers,
         data=data
     )
+
+    return json.loads(response.content)
+
+
+def delete_account(token, user_id):
+    headers = get_headers(token)
+
+    response = requests.delete(
+        url=f'{URL}{DELETE}{user_id}',
+        headers=headers
+    )
+
+    return json.loads(response.content)
 
 
 def get_token(username, password):
@@ -135,7 +155,7 @@ def get_task_detail(token, user_id, task_id):
     }
 
     response = requests.get(
-        url=f'{URL}{TASKS}{task_id}',
+        url=f'{URL}{TASKS}{task_id}/',
         headers=headers,
         data=data
     )
@@ -143,28 +163,12 @@ def get_task_detail(token, user_id, task_id):
     return json.loads(response.content)
 
 
-def get_task_child(token, user_id, task_id):
-    headers = get_headers(token)
-
-    data = {
-        'user': user_id
-    }
-
-    response = requests.get(
-        url=f'{URL}{TASKS_CHILD}{task_id}',
-        headers=headers,
-        data=data
-    )
-
-    return json.loads(response.content)
-
-
-def create_task(token, user_id, parent_id=None, title=None, description=None, due_date=None):
+def create_task(token, user_id, parent_uuid=None, title=None, description=None, due_date=None):
     headers = get_headers(token)
 
     data = {
         'user': user_id,
-        'parent': parent_id,
+        'parent_uuid': parent_uuid,
         'title': title,
         'description': description,
         'due_date': due_date,
@@ -203,11 +207,13 @@ def delete_task(token, user_id, task_id):
         'user': user_id,
     }
 
-    return requests.delete(
+    response = requests.delete(
         url=f'{URL}{TASKS}{task_id}/',
         headers=headers,
         data=data
     )
+
+    return json.loads(response.content)
 
 
 if __name__ == '__main__':
@@ -219,17 +225,38 @@ if __name__ == '__main__':
     # refresh_token, access_token = get_refresh_token(refresh_token)
 
     # response = change_password(access_token, user_id, PASSWORD, NEW_PASSWORD, NEW_PASSWORD)
-    # response = update_user(access_token, user_id, NEW_USERNAME, NEW_EMAIL)
+    # response = update_account(access_token, user_id, NEW_USERNAME, NEW_EMAIL)
+    # response = delete_account(access_token, user_id)
 
-    # create_task(access_token, user_id, 'task1', 'description1', now)
-    # create_task(access_token, user_id, 'task2', 'description2', now)
-    # create_task(access_token, user_id, 'ede95c32-e161-4817-b27f-c73ea91ea2b1', 'task3', 'description3', now)
-    # create_task(access_token, user_id, 'ede95c32-e161-4817-b27f-c73ea91ea2b1', 'task4', 'description4', now)
-    # response = create_task('asdf', user_id, 'task5', 'description5', now)
+    # response = create_task(
+    #     token=access_token,
+    #     user_id=user_id,
+    #     title='test1',
+    #     description='description1',
+    #     due_date=now
+    # )
+
+    # response = create_task(
+    #     token=access_token,
+    #     user_id=user_id,
+    #     parent_uuid='',
+    #     title='test2',
+    #     description='description2',
+    #     due_date=now
+    # )
     
-    # update_task(access_token, user_id, 'c5acdca7-4aab-4700-ab2c-af2dd53e01b9', 'test task 456')
-    # delete_task(access_token, user_id, '9c0cf6c0-c45b-422c-8e7e-73e5970ddb6d')
+    # response = update_task(
+    #     token=access_token,
+    #     user_id=user_id,
+    #     task_id='',
+    #     new_title=''
+    # )
+    
+    # response = delete_task(
+    #     token=access_token,
+    #     user_id=user_id,
+    #     task_id=''
+    # )
     
     # tasks = get_tasks(access_token, user_id)
-    # task = get_task_detail(access_token, user_id, 'ede95c32-e161-4817-b27f-c73ea91ea2b1')
-    # child = get_task_child('asdf', user_id, 'ede95c32-e161-4817-b27f-c73ea91ea2b1')
+    # task = get_task_detail(access_token, user_id, '')
