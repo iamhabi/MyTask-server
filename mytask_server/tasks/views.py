@@ -12,12 +12,10 @@ class TaskViewSet(ModelViewSet):
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
     permission_classes = [IsAuthenticated]
-
+    
     def get_child(request, id):
         try:
             response = JWTAuthentication().authenticate(request)
-
-            print(response)
 
             if response[1]['token_type'] == 'access':
                 child = Task.objects.filter(parent=id)
