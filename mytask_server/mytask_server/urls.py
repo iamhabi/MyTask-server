@@ -31,7 +31,6 @@ router.register(r'tasks', TaskViewSet, basename='tasks')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/tasks/child/<str:id>', TaskViewSet.get_child, name='child'),
     path('api/account/register/', RegisterView.as_view(), name='register'),
     path('api/account/delete/<str:pk>', DeleteView.as_view(), name='delete'),
     path('api/account/change_password/<str:pk>', ChangePasswordView.as_view(), name='change_password'),

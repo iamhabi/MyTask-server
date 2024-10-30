@@ -16,3 +16,14 @@ class Task(models.Model):
     
     def __str__(self) -> str:
         return self.title
+    
+    def to_json(self):
+        return {
+            'uuid': self.uuid,
+            'user': self.user.id,
+            'parent_uuid': self.parent_uuid,
+            'title': self.title,
+            'description': self.description,
+            'due_date': self.due_date,
+            'created': self.created
+        }
