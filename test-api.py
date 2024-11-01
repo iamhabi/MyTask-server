@@ -200,6 +200,23 @@ def update_task(token, user_id, task_id, new_title):
     return json.loads(response.content)
 
 
+def update_task_done_state(token, user_id, task_id, is_done):
+    headers = get_headers(token)
+
+    data = {
+        'user': user_id,
+        'is_done': is_done
+    }
+
+    response = requests.put(
+        url=f'{URL}{TASKS}{task_id}/',
+        headers=headers,
+        data=data
+    )
+
+    return json.loads(response.content)
+
+
 def delete_task(token, user_id, task_id):
     headers = get_headers(token)
 
@@ -221,7 +238,7 @@ if __name__ == '__main__':
 
     # response = register(USERNAME, EMAIL, PASSWORD, PASSWORD)
 
-    # refresh_token, access_token, user_id = get_token(USERNAME, PASSWORD)
+    refresh_token, access_token, user_id = get_token(USERNAME, PASSWORD)
     # refresh_token, access_token = get_refresh_token(refresh_token)
 
     # response = change_password(access_token, user_id, PASSWORD, NEW_PASSWORD, NEW_PASSWORD)
@@ -257,6 +274,16 @@ if __name__ == '__main__':
     #     user_id=user_id,
     #     task_id=''
     # )
+
+    response = update_task_done_state(
+        token=access_token,
+        user_id=user_id,
+        task_id='17fec1d4-d868-44ed-8854-9d68fce44d00',
+        is_done=True
+    )
+
+    print(response)
     
-    # tasks = get_tasks(access_token, user_id)
+    tasks = get_tasks(access_token, user_id)
+    print(tasks)
     # task = get_task_detail(access_token, user_id, '')
