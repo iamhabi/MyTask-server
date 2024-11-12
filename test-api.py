@@ -28,9 +28,9 @@ NEW_PASSWORD = 'test1111test1111'
 def register(username, email, password1, password2):
     data = {
         'username': username,
+        'email': email,
         'password1': password1,
         'password2': password2,
-        'email': email,
     }
 
     response = requests.post(
@@ -275,15 +275,15 @@ if __name__ == '__main__':
     #     task_id=''
     # )
 
-    response = update_task_done_state(
-        token=access_token,
-        user_id=user_id,
-        task_id='17fec1d4-d868-44ed-8854-9d68fce44d00',
-        is_done=True
-    )
+    # response = update_task_done_state(
+    #     token=access_token,
+    #     user_id=user_id,
+    #     task_id='17fec1d4-d868-44ed-8854-9d68fce44d00',
+    #     is_done=True
+    # )
 
-    print(response)
+    # print(response)
     
-    tasks = get_tasks(access_token, user_id)
-    print(tasks)
+    # tasks = get_tasks(access_token, user_id)
+    # print(tasks)
     # task = get_task_detail(access_token, user_id, '')

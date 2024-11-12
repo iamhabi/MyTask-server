@@ -11,9 +11,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
         token["user_id"] = str(user.id)
-
         return token
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
@@ -23,18 +21,23 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        required = True,
-    )
-
+    email = serializers.EmailField(required = True)
     password1 = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = MyUser
-        fields = ['username', 'password1', 'password2', 'email']
+        fields = ['username', 'email', 'password1', 'password2']
     
     def validate(self, attrs):
+        user = self.context['request'].user
+
+        if MyUser.objects.exclude(id=user.id).filter(username=attrs['username']).exists():
+            raise serializers.ValidationError({"username": "This username is already in use."})
+        
+        if MyUser.objects.exclude(id=user.id).filter(email=attrs['email']).exists():
+            raise serializers.ValidationError({"email": "This email is already in use."})
+        
         if attrs['password1'] != attrs['password2']:
             raise serializers.ValidationError({'password': "Password fields didn't match."})
     
