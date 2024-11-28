@@ -16,9 +16,9 @@ TOKEN_REFRESH = f'{TOKEN}refresh/'
 TASKS = 'tasks/'
 
 
-USERNAME = 'test111'
-EMAIL = 'test111@example.invalid'
-PASSWORD = 'test111test111'
+USERNAME = 'test1'
+EMAIL = 'test1@example.invalid'
+PASSWORD = 'test1test1'
 
 NEW_USERNAME = 'test1111'
 NEW_EMAIL = 'test1111@example.invalid'
@@ -125,49 +125,39 @@ def get_refresh_token(refresh):
     return refresh_token, access_token
 
 
-def get_headers(token):
+def get_headers(token, user_id):
     return {
-        'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {token}',
+        'user': user_id
     }
 
 
 def get_tasks(token, user_id):
-    headers = get_headers(token)
-
-    data = {
-        'user': user_id
-    }
+    headers = get_headers(token, user_id)
 
     response = requests.get(
         url=f'{URL}{TASKS}',
         headers=headers,
-        data=data
     )
 
     return json.loads(response.content)
 
 
 def get_task_detail(token, user_id, task_id):
-    headers = get_headers(token)
-
-    data = {
-        'user': user_id
-    }
+    headers = get_headers(token, user_id)
 
     response = requests.get(
         url=f'{URL}{TASKS}{task_id}/',
         headers=headers,
-        data=data
     )
 
     return json.loads(response.content)
 
 
 def create_task(token, user_id, parent_uuid=None, title=None, description=None, due_date=None):
-    headers = get_headers(token)
+    headers = get_headers(token, user_id)
 
     data = {
-        'user': user_id,
         'parent_uuid': parent_uuid,
         'title': title,
         'description': description,
@@ -184,10 +174,9 @@ def create_task(token, user_id, parent_uuid=None, title=None, description=None, 
 
 
 def update_task(token, user_id, task_id, new_title):
-    headers = get_headers(token)
+    headers = get_headers(token, user_id)
 
     data = {
-        'user': user_id,
         'title': new_title
     }
 
@@ -201,10 +190,9 @@ def update_task(token, user_id, task_id, new_title):
 
 
 def update_task_done_state(token, user_id, task_id, is_done):
-    headers = get_headers(token)
+    headers = get_headers(token, user_id)
 
     data = {
-        'user': user_id,
         'is_done': is_done
     }
 
@@ -218,16 +206,11 @@ def update_task_done_state(token, user_id, task_id, is_done):
 
 
 def delete_task(token, user_id, task_id):
-    headers = get_headers(token)
-
-    data = {
-        'user': user_id,
-    }
+    headers = get_headers(token, user_id)
 
     response = requests.delete(
         url=f'{URL}{TASKS}{task_id}/',
         headers=headers,
-        data=data
     )
 
     return json.loads(response.content)
@@ -284,6 +267,6 @@ if __name__ == '__main__':
 
     # print(response)
     
-    # tasks = get_tasks(access_token, user_id)
-    # print(tasks)
+    tasks = get_tasks(access_token, user_id)
+    print(tasks)
     # task = get_task_detail(access_token, user_id, '')

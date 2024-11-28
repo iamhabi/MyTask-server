@@ -13,14 +13,14 @@ class TaskViewSet(ModelViewSet):
     permission_classes = [TaskPermission]
 
     def list(self, request, *args, **kwargs):
-        user = request.data['user']
+        user = request.headers['user']
         tasks = Task.objects.filter(user=user)
 
         return JsonResponse(list(tasks.values()), safe=False)
     
     def retrieve(self, request, *args, **kwargs):
         try:
-            user = request.data['user']
+            user = request.headers['user']
             task_id = kwargs['pk']
             
             task = Task.objects.get(uuid=task_id, user=user)
