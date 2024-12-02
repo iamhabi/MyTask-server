@@ -78,16 +78,13 @@ class TaskViewSet(ModelViewSet):
 
             return response
         except Exception as e:
-            return JsonResponse(
-                {
-                    'response': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    'message': e.args
-                }, safe=False
-            )
+            return JsonResponse(e.args, safe=False)
     
     def retrieve(self, request, *args, **kwargs):
         try:
             user = request.headers['user']
+            user = MyUser.objects.get(id=user)
+          
             task_id = kwargs['pk']
             
             task = Task.objects.get(uuid=task_id, user=user)
@@ -104,28 +101,22 @@ class TaskViewSet(ModelViewSet):
 
             return response
         except Exception as e:
-            return JsonResponse(
-                {
-                    'response': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    'message': e.args
-                }, safe=False
-            )
+            return JsonResponse(e.args, safe=False)
         
     def destroy(self, request, *args, **kwargs):
         try:
             user = request.headers['user']
+            user = MyUser.objects.get(id=user)
+           
             task_id = kwargs['pk']
 
             task = Task.objects.get(uuid=task_id, user=user)
-            result = task.delete()
+            task.delete()
 
-            print(result)
-
-            return super().destroy(request, *args, **kwargs)
-        except Exception as e:
             return JsonResponse(
                 {
-                    'response': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    'message': e.args
-                }, safe=False
+                    'response': status.HTTP_200_OK
+                }
             )
+        except Exception as e:
+            return JsonResponse(e.args, safe=False)
