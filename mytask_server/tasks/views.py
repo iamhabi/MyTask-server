@@ -79,6 +79,33 @@ class TaskViewSet(ModelViewSet):
             return response
         except Exception as e:
             return JsonResponse(e.args, safe=False)
+        
+    def update(self, request, *args, **kwargs):
+        try:
+            user = request.headers['user']
+            user = MyUser.objects.get(id=user)
+
+            task_uuid = kwargs['pk']
+
+            task = Task.objects.get(uuid=task_uuid, user=user)
+            newTask = Task(**request.data)
+
+            task.parent_uuid = newTask.parent_uuid
+            task.title = newTask.title
+            task.description = newTask.description
+            task.is_done = newTask.is_done
+            task.due_date = newTask.due_date
+
+            task.save()
+
+            return JsonResponse(
+                {
+                    'response': status.HTTP_200_OK,
+                    'task': task.to_json()
+                }
+            )
+        except Exception as e:
+            return JsonResponse(e.args, safe=False)
     
     def retrieve(self, request, *args, **kwargs):
         try:
