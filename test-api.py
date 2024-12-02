@@ -210,7 +210,7 @@ def delete_task(token, user_id, task_id):
 
     response = requests.delete(
         url=f'{URL}{TASKS}{task_id}/',
-        headers=headers,
+        headers=headers
     )
 
     return json.loads(response.content)
@@ -236,14 +236,12 @@ if __name__ == '__main__':
     #     due_date=now
     # )
 
-    # response = create_task(
-    #     token=access_token,
-    #     user_id=user_id,
-    #     parent_uuid='',
-    #     title='test2',
-    #     description='description2',
-    #     due_date=now
-    # )
+    response = create_task(
+        token=access_token,
+        user_id=user_id,
+    )
+
+    print(response)
     
     # response = update_task(
     #     token=access_token,
@@ -255,8 +253,9 @@ if __name__ == '__main__':
     # response = delete_task(
     #     token=access_token,
     #     user_id=user_id,
-    #     task_id=''
+    #     task_id='95cdc3a9-9564-4700-b3cd-5e099c6eebfd'
     # )
+    # print(response)
 
     # response = update_task_done_state(
     #     token=access_token,
