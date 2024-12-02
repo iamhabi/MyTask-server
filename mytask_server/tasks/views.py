@@ -1,5 +1,6 @@
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse
 
+from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 
 from .models import Task, MyUser
@@ -16,14 +17,18 @@ class TaskViewSet(ModelViewSet):
         user = request.headers['user']
         tasks = Task.objects.filter(user=user)
 
-        return JsonResponse(list(tasks.values()), safe=False)
+        return JsonResponse(
+            {
+                'response': status.HTTP_200_OK,
+                'tasks': list(tasks.values())
+            },
+            safe=False
+        )
     
     def create(self, request, *args, **kwargs):
         try:
             user = request.headers['user']
             user = MyUser.objects.get(id=user)
-
-            print(request.data)
 
             if 'parent_uuid' in request.data and not request.data['parent_uuid'] == '' and not request.data['parent_uuid'] == None:
                 parent_uuid = request.data['parent_uuid']
@@ -36,6 +41,7 @@ class TaskViewSet(ModelViewSet):
             else:
                 return JsonResponse(
                     {
+                        'response': status.HTTP_400_BAD_REQUEST,
                         'error': 'Title is empty'
                     },
                     safe=False
@@ -64,6 +70,7 @@ class TaskViewSet(ModelViewSet):
 
             response = JsonResponse(
                 {
+                    'response': status.HTTP_201_CREATED,
                     'task': task.to_json()
                 },
                 safe=False
@@ -71,7 +78,12 @@ class TaskViewSet(ModelViewSet):
 
             return response
         except Exception as e:
-            return JsonResponse(e.args, safe=False)
+            return JsonResponse(
+                {
+                    'response': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    'message': e.args
+                }, safe=False
+            )
     
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -83,6 +95,7 @@ class TaskViewSet(ModelViewSet):
 
             response = JsonResponse(
                 {
+                    'response': status.HTTP_200_OK,
                     'task': task.to_json(),
                     'child': list(child_tasks.values())
                 },
@@ -91,11 +104,14 @@ class TaskViewSet(ModelViewSet):
 
             return response
         except Exception as e:
-            return JsonResponse(e.args, safe=False)
+            return JsonResponse(
+                {
+                    'response': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    'message': e.args
+                }, safe=False
+            )
         
     def destroy(self, request, *args, **kwargs):
-        print('destroy')
-        
         try:
             user = request.headers['user']
             task_id = kwargs['pk']
@@ -107,4 +123,9 @@ class TaskViewSet(ModelViewSet):
 
             return super().destroy(request, *args, **kwargs)
         except Exception as e:
-            return JsonResponse(e.args, safe=False)
+            return JsonResponse(
+                {
+                    'response': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    'message': e.args
+                }, safe=False
+            )
