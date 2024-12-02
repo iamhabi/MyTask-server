@@ -23,13 +23,15 @@ class TaskViewSet(ModelViewSet):
             user = request.headers['user']
             user = MyUser.objects.get(id=user)
 
-            if 'parent_uuid' in request.data and not request.data['parent_uuid'] == '':
+            print(request.data)
+
+            if 'parent_uuid' in request.data and not request.data['parent_uuid'] == '' and not request.data['parent_uuid'] == None:
                 parent_uuid = request.data['parent_uuid']
                 parent_uuid = Task.objects.get(uuid=parent_uuid)
             else:
                 parent_uuid = None
             
-            if 'title' in request.data:
+            if 'title' in request.data and not request.data['title'] == None:
                 title = request.data['title']
             else:
                 return JsonResponse(
@@ -39,12 +41,12 @@ class TaskViewSet(ModelViewSet):
                     safe=False
                 )
 
-            if 'description' in request.data:
+            if 'description' in request.data and not request.data['description'] == None:
                 description = request.data['description']
             else:
                 description = None
 
-            if 'due_date' in request.data:
+            if 'due_date' in request.data and not request.data['due_date'] == None:
                 due_date = request.data['due_date']
             else:
                 due_date = None
