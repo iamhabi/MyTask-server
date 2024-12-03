@@ -36,7 +36,6 @@ class TaskViewSet(ModelViewSet):
 
             if 'parent_id' in request.data and not request.data['parent_id'] == '' and not request.data['parent_id'] == None:
                 parent_id = request.data['parent_id']
-                parent_id = Task.objects.get(id=parent_id)
             else:
                 parent_id = None
             
@@ -94,7 +93,7 @@ class TaskViewSet(ModelViewSet):
             task = Task.objects.get(id=task_id, user=user)
             newTask = Task(**request.data)
 
-            task.parent = newTask.parent
+            task.parent_id = newTask.parent_id
             task.title = newTask.title
             task.description = newTask.description
             task.is_done = newTask.is_done
@@ -110,30 +109,7 @@ class TaskViewSet(ModelViewSet):
             )
         except Exception as e:
             return JsonResponse(e.args, safe=False)
-    
-    def retrieve(self, request, *args, **kwargs):
-        try:
-            user = request.headers['user']
-            user = MyUser.objects.get(id=user)
-          
-            task_id = kwargs['pk']
-            
-            task = Task.objects.get(id=task_id, user=user)
-            child_tasks = Task.objects.filter(parent_id=task_id)
 
-            response = JsonResponse(
-                {
-                    'response': status.HTTP_200_OK,
-                    'task': task.to_json(),
-                    'child': list(child_tasks.values())
-                },
-                safe=False
-            )
-
-            return response
-        except Exception as e:
-            return JsonResponse(e.args, safe=False)
-        
     def destroy(self, request, *args, **kwargs):
         try:
             user = request.headers['user']
