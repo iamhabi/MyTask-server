@@ -14,16 +14,20 @@ class TaskViewSet(ModelViewSet):
     permission_classes = [TaskPermission]
 
     def list(self, request, *args, **kwargs):
-        user = request.headers['user']
-        tasks = Task.objects.filter(user=user)
+        try:
+            user = request.headers['user']
+            tasks = Task.objects.filter(user=user)
+            tasks = list(tasks.values())
 
-        return JsonResponse(
-            {
-                'response': status.HTTP_200_OK,
-                'tasks': list(tasks.values())
-            },
-            safe=False
-        )
+            return JsonResponse(
+                {
+                    'response': status.HTTP_200_OK,
+                    'tasks': tasks
+                },
+                safe=False
+            )
+        except Exception as e:
+            return JsonResponse(e.args, safe=False)
     
     def create(self, request, *args, **kwargs):
         try:
