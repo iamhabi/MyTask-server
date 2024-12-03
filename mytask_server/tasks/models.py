@@ -6,9 +6,9 @@ import uuid
 
 
 class Task(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='tasks', related_query_name='tasks')
-    parent_uuid = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, default=None)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, default=None)
     title = models.TextField(blank=True, null=False)
     description = models.TextField(blank=True, null=True)
     is_done = models.BooleanField(default=False, blank=True, null=False)
@@ -20,9 +20,8 @@ class Task(models.Model):
     
     def to_json(self):
         return {
-            'uuid': self.uuid,
-            'user': self.user.id,
-            'parent_uuid': self.parent_uuid,
+            'id': self.id,
+            'parent': self.parent,
             'title': self.title,
             'description': self.description,
             'is_done': self.is_done,

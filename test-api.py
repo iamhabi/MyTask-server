@@ -154,11 +154,11 @@ def get_task_detail(token, user_id, task_id):
     return json.loads(response.content)
 
 
-def create_task(token, user_id, parent_uuid=None, title=None, description=None, due_date=None):
+def create_task(token, user_id, parent_id=None, title=None, description=None, due_date=None):
     headers = get_headers(token, user_id)
 
     data = {
-        'parent_uuid': parent_uuid,
+        'parent_id': parent_id,
         'title': title,
         'description': description,
         'due_date': due_date,
@@ -236,12 +236,12 @@ if __name__ == '__main__':
     #     due_date=now
     # )
 
-    response = create_task(
-        token=access_token,
-        user_id=user_id,
-    )
+    # response = create_task(
+    #     token=access_token,
+    #     user_id=user_id,
+    # )
 
-    print(response)
+    # print(response)
     
     # response = update_task(
     #     token=access_token,

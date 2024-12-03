@@ -34,11 +34,11 @@ class TaskViewSet(ModelViewSet):
             user = request.headers['user']
             user = MyUser.objects.get(id=user)
 
-            if 'parent_uuid' in request.data and not request.data['parent_uuid'] == '' and not request.data['parent_uuid'] == None:
-                parent_uuid = request.data['parent_uuid']
-                parent_uuid = Task.objects.get(uuid=parent_uuid)
+            if 'parent_id' in request.data and not request.data['parent_id'] == '' and not request.data['parent_id'] == None:
+                parent_id = request.data['parent_id']
+                parent_id = Task.objects.get(id=parent_id)
             else:
-                parent_uuid = None
+                parent_id = None
             
             if 'title' in request.data and not request.data['title'] == None:
                 title = request.data['title']
@@ -63,7 +63,7 @@ class TaskViewSet(ModelViewSet):
 
             task = Task.objects.create(
                 user=user,
-                parent_uuid=parent_uuid,
+                parent_id=parent_id,
                 title=title,
                 description=description,
                 is_done=False,
@@ -89,12 +89,12 @@ class TaskViewSet(ModelViewSet):
             user = request.headers['user']
             user = MyUser.objects.get(id=user)
 
-            task_uuid = kwargs['pk']
+            task_id = kwargs['pk']
 
-            task = Task.objects.get(uuid=task_uuid, user=user)
+            task = Task.objects.get(id=task_id, user=user)
             newTask = Task(**request.data)
 
-            task.parent_uuid = newTask.parent_uuid
+            task.parent = newTask.parent
             task.title = newTask.title
             task.description = newTask.description
             task.is_done = newTask.is_done
@@ -118,8 +118,8 @@ class TaskViewSet(ModelViewSet):
           
             task_id = kwargs['pk']
             
-            task = Task.objects.get(uuid=task_id, user=user)
-            child_tasks = Task.objects.filter(parent_uuid=task_id)
+            task = Task.objects.get(id=task_id, user=user)
+            child_tasks = Task.objects.filter(parent_id=task_id)
 
             response = JsonResponse(
                 {
@@ -141,7 +141,7 @@ class TaskViewSet(ModelViewSet):
            
             task_id = kwargs['pk']
 
-            task = Task.objects.get(uuid=task_id, user=user)
+            task = Task.objects.get(id=task_id, user=user)
             task.delete()
 
             return JsonResponse(
