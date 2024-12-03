@@ -17,12 +17,16 @@ class TaskViewSet(ModelViewSet):
         try:
             user = request.headers['user']
             tasks = Task.objects.filter(user=user)
-            tasks = list(tasks.values())
+
+            tasks_json = []
+
+            for task in tasks:
+                tasks_json.append(task.to_json())
 
             return JsonResponse(
                 {
                     'response': status.HTTP_200_OK,
-                    'tasks': tasks
+                    'tasks': tasks_json
                 },
                 safe=False
             )
@@ -119,6 +123,8 @@ class TaskViewSet(ModelViewSet):
 
             task = Task.objects.get(id=task_id, user=user)
             task.delete()
+
+            # TODO delete sub tasks
 
             return JsonResponse(
                 {
