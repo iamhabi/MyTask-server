@@ -95,13 +95,13 @@ class TaskViewSet(ModelViewSet):
             task_id = kwargs['pk']
 
             task = Task.objects.get(id=task_id, user=user)
-            newTask = Task(**request.data)
+            updated_task = Task(**request.data)
 
-            task.parent_id = newTask.parent_id
-            task.title = newTask.title
-            task.description = newTask.description
-            task.is_done = newTask.is_done
-            task.due_date = newTask.due_date
+            task.parent_id = updated_task.parent_id
+            task.title = updated_task.title
+            task.description = updated_task.description
+            task.is_done = updated_task.is_done
+            task.due_date = updated_task.due_date
 
             task.save()
 
