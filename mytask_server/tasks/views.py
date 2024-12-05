@@ -122,9 +122,10 @@ class TaskViewSet(ModelViewSet):
             task_id = kwargs['pk']
 
             task = Task.objects.get(id=task_id, user=user)
-            task.delete()
 
-            # TODO delete sub tasks
+            self.destroy_sub_tasks(user, task)
+
+            task.delete()
 
             return JsonResponse(
                 {
@@ -133,3 +134,11 @@ class TaskViewSet(ModelViewSet):
             )
         except Exception as e:
             return JsonResponse(e.args, safe=False)
+    
+    def destroy_sub_tasks(self, user, parent_task):
+        sub_tasks = Task.objects.filter(user=user, parent_id=parent_task.id)
+
+        for sub_task in sub_tasks:
+            self.destroy_sub_tasks(user, sub_task)
+            
+            sub_task.delete()
